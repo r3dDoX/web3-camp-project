@@ -3,9 +3,10 @@ import {useState} from 'react';
 import {ethers} from 'ethers';
 import Greeter from './artifacts/contracts/Greeter.sol/Greeter.json';
 import Blob from './artifacts/contracts/Blob.sol/Blob.json';
+import version from './blob-contract-address.json'
 
-const greeterAddress = '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707';
-const blobAddress = '0x0165878A594ca255338adfa4d48449f69242Eb8F';
+const greeterAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const blobAddress = version;
 
 function App() {
   const [greeting, setGreetingValue] = useState();
@@ -52,10 +53,29 @@ function App() {
     }
   }
 
+  async function fetchBlobs() {
+    if (!window.ethereum) {
+      return;
+    }
+
+    await requestAccount();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    const contract = new ethers.Contract(blobAddress, Blob.abi, signer);
+    const address = await signer.getAddress();
+    const balance = await contract.balanceOf(address);
+
+    for (let i = 0; i < balance; i++) {
+      const token = await contract.tokenOfOwnerByIndex(address, i);
+      console.log("token URI:", await contract.tokenURI(token));
+    }
+  }
+
   return (
     <div className="App">
       <header className="App-header">
         <button onClick={mintBlob}>Mint Blob</button>
+        <button onClick={fetchBlobs}>Fetch Blobs</button>
         <br />
         <button onClick={fetchGreeting}>Fetch Greeting</button>
         <button onClick={setGreeting}>Set Greeting</button>
