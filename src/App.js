@@ -34,6 +34,8 @@ function App() {
     const address = await signer.getAddress();
     const balance = await contract.balanceOf(address);
 
+    setBlobs([]);
+
     for (let i = 0; i < balance; i++) {
       const token = await contract.tokenOfOwnerByIndex(address, i);
       const tokenUri = await contract.tokenURI(token);
