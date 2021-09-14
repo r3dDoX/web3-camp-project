@@ -40,6 +40,45 @@ contract Wands is ERC721, ERC721Enumerable, Ownable {
         return wands[tokenId];
     }
 
+    function compare(uint256 attackerTokenId, uint256 defenderTokenId, string memory trait) public {
+        require(_exists(attackerTokenId), "ERC721Metadata: URI query for nonexistent attackerTokenId");
+        require(_exists(defenderTokenId), "ERC721Metadata: URI query for nonexistent defenderTokenId");
+
+        address attackerOwnerAddress = ERC721.ownerOf(attackerTokenId);
+        address defenderOwnerAddress = ERC721.ownerOf(defenderTokenId);
+
+        uint8 attackerTraitValue = getTraitValue(attackerTokenId, trait);
+        uint8 defenderTraitValue = getTraitValue(defenderTokenId, trait);
+
+        if (attackerTraitValue >= defenderTraitValue) {
+            ERC721.transferFrom(defenderOwnerAddress, attackerOwnerAddress, defenderTokenId);
+        } else {
+            ERC721.transferFrom(attackerOwnerAddress, defenderOwnerAddress, attackerTokenId);
+        }
+    }
+
+    function getTraitValue(uint256 tokenId, string memory trait) public view returns (uint8) {
+        Wand memory wand = getWand(tokenId);
+
+        if (stringEquals(trait, "fire")) {
+            return wand.fire;
+        }
+
+        if (stringEquals(trait, "frost")) {
+            return wand.frost;
+        }
+
+        if (stringEquals(trait, "arcane")) {
+            return wand.arcane;
+        }
+
+        return wand.style;
+    }
+
+    function stringEquals(string memory a, string memory b) internal pure returns (bool) {
+        return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
+    }
+
     // The following functions are overrides required by Solidity.
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
