@@ -1,28 +1,28 @@
 import './App.css';
 import {useState} from 'react';
 import {ethers} from 'ethers';
-import Blob from './artifacts/contracts/Blob.sol/Blob.json';
-import blobAddress from './blob-contract-address.json';
+import Wands from './artifacts/contracts/Wands.sol/Wands.json';
+import wandsAddress from './wands-contract-address.json';
 
 function App() {
-  const [blobs, setBlobs] = useState([]);
+  const [wands, setWands] = useState([]);
 
   async function requestAccount() {
     await window.ethereum.request({method: 'eth_requestAccounts'});
   }
 
-  async function mintBlob() {
+  async function mintWand() {
     if (typeof window.ethereum !== 'undefined') {
       await requestAccount();
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      const contract = new ethers.Contract(blobAddress, Blob.abi, signer);
+      const contract = new ethers.Contract(wandsAddress, Wands.abi, signer);
       const transaction = await contract.safeMint(await signer.getAddress());
       await transaction.wait();
     }
   }
 
-  async function fetchBlobs() {
+  async function fetchWands() {
     if (!window.ethereum) {
       return;
     }
@@ -30,26 +30,33 @@ function App() {
     await requestAccount();
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
-    const contract = new ethers.Contract(blobAddress, Blob.abi, signer);
+    const contract = new ethers.Contract(wandsAddress, Wands.abi, signer);
     const address = await signer.getAddress();
     const balance = await contract.balanceOf(address);
 
-    setBlobs([]);
+    setWands([]);
 
     for (let i = 0; i < balance; i++) {
       const token = await contract.tokenOfOwnerByIndex(address, i);
-      const tokenUri = await contract.tokenURI(token);
-      const decodedToken = JSON.parse(atob(tokenUri.split(',')[1]));
-      setBlobs((prevBlobs) => [...prevBlobs, decodedToken]);
+      const wand = await contract.getWand(token);
+      setWands((prevWands) => [...prevWands, {tokenId: parseInt(token._hex), ...wand}]);
     }
   }
 
   return (
     <div className="App">
-      <button onClick={mintBlob}>Mint Blob</button>
-      <button onClick={fetchBlobs}>Fetch Blobs</button>
+      <button onClick={mintWand}>Mint Wand</button>
+      <button onClick={fetchWands}>Fetch Wands</button>
       <div className="blobs">
-        {blobs.map((blob, index) => <img key={index} src={blob.image} alt={blob.name}/>)}
+        {wands.map((wand, index) => (
+          <p key={index}>
+            Wand #{wand.tokenId}<br /><br />
+            Fire: {wand.fire}<br />
+            Frost: {wand.frost}<br />
+            Arcane: {wand.arcane}<br />
+            Style: {wand.style}<br />
+          </p>
+        ))}
       </div>
     </div>
   );

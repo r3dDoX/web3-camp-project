@@ -10,8 +10,12 @@
   flex-wrap: wrap;
 }
 
-img {
-  width: 350px;
-  height: 350px;
+p {
+  width: 250px;
+  height: 250px;
   margin: 5px;
+  background-color: aliceblue;
+  border-radius: 10px;
+  padding: 10px;
+  line-height: 1.5;
 }

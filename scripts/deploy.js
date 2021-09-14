@@ -15,14 +15,14 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
-  const Blob = await hre.ethers.getContractFactory("Blob");
-  const blob = await Blob.deploy();
+  const Wands = await hre.ethers.getContractFactory("Wands");
+  const wands = await Wands.deploy();
 
-  await blob.deployed();
+  await wands.deployed();
 
-  fs.writeFileSync('src/blob-contract-address.json', `"${blob.address}"`);
+  fs.writeFileSync('src/wands-contract-address.json', `"${wands.address}"`);
 
-  console.log("Blob deployed to:", blob.address);
+  console.log("Wands deployed to:", wands.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
