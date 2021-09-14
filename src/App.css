@@ -1,13 +1,17 @@
 .App {
   background-color: #282c34;
   min-height: 100vh;
+  padding: 10px;
 }
 
 .blobs {
+  margin: 10px -5px -5px;
   display: flex;
+  flex-wrap: wrap;
 }
 
 img {
   width: 350px;
   height: 350px;
+  margin: 5px;
 }
