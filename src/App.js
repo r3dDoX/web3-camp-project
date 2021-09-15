@@ -43,24 +43,10 @@ function App() {
         }
     }
 
-    async function fight() {
-        if (!window.ethereum) {
-            return;
-        }
-
-        await requestAccount();
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        const contract = new ethers.Contract(wandsAddress, Wands.abi, signer);
-
-        await contract.compare(0, 1, "fire");
-    }
-
     return (
         <div className="App">
             <button onClick={mintWand}>Mint Wand</button>
             <button onClick={fetchWands}>Fetch Wands</button>
-            <button onClick={fight}>Fight</button>
             <div className="blobs">
                 {wands.map((wand, index) => (
                     <>
