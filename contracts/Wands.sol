@@ -26,12 +26,12 @@ contract Wands is ERC721, ERC721Enumerable, Ownable {
     function safeMint(address to) public {
         uint256 currentCounter = _tokenIdCounter.current();
         _safeMint(to, currentCounter);
-        string memory counterText = Strings.toString(currentCounter);
+        bytes memory randomizer = abi.encodePacked(block.difficulty, block.timestamp, Strings.toString(currentCounter));
         wands[currentCounter] = Wand(
-            uint8(uint256(keccak256(abi.encodePacked('fire', counterText)))),
-            uint8(uint256(keccak256(abi.encodePacked('frost', counterText)))),
-            uint8(uint256(keccak256(abi.encodePacked('arcane', counterText)))),
-            uint8(uint256(keccak256(abi.encodePacked('style', counterText))))
+            uint8(uint256(keccak256(abi.encodePacked('fire', randomizer)))),
+            uint8(uint256(keccak256(abi.encodePacked('frost', randomizer)))),
+            uint8(uint256(keccak256(abi.encodePacked('arcane', randomizer)))),
+            uint8(uint256(keccak256(abi.encodePacked('style', randomizer))))
         );
         _tokenIdCounter.increment();
     }
