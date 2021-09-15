@@ -49,7 +49,7 @@ function App() {
       <button onClick={fetchWands}>Fetch Wands</button>
       <div className="blobs">
         {wands.map((wand, index) => (
-          <p key={index}>
+          <p key={index} style={{ backgroundColor: `rgba(${wand.fire}, ${wand.frost}, ${wand.arcane}, ${wand.style})`}}>
             Wand #{wand.tokenId}<br/><br/>
             Fire: {wand.fire}<br/>
             Frost: {wand.frost}<br/>
