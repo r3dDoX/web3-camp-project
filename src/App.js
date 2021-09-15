@@ -38,8 +38,10 @@ function App() {
 
     for (let i = 0; i < balance; i++) {
       const token = await contract.tokenOfOwnerByIndex(address, i);
+      const encodedToken = await contract.tokenURI(token);
+      const decodedToken = JSON.parse(atob(encodedToken.split(',')[1]));
       const wand = await contract.getWand(token);
-      setWands((prevWands) => [...prevWands, {tokenId: parseInt(token._hex), ...wand}]);
+      setWands((prevWands) => [...prevWands, { tokenId: parseInt(token._hex), image: decodedToken.image, ...wand}]);
     }
   }
 
@@ -49,13 +51,16 @@ function App() {
       <button onClick={fetchWands}>Fetch Wands</button>
       <div className="blobs">
         {wands.map((wand, index) => (
-          <p key={index} style={{ backgroundColor: `rgba(${wand.fire}, ${wand.frost}, ${wand.arcane}, ${wand.style})`}}>
-            Wand #{wand.tokenId}<br/><br/>
-            Fire: {wand.fire}<br/>
-            Frost: {wand.frost}<br/>
-            Arcane: {wand.arcane}<br/>
-            Style: {wand.style}<br/>
-          </p>
+          <div key={index}>
+            <img key={index} src={wand.image} />
+            <p key={index}>
+              Wand #{wand.tokenId}<br/><br/>
+              Fire: {wand.fire}<br/>
+              Frost: {wand.frost}<br/>
+              Arcane: {wand.arcane}<br/>
+              Style: {wand.style}<br/>
+            </p>
+          </div>
         ))}
       </div>
     </div>
