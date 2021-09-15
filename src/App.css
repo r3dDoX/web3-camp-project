@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .App {
   background-color: #282c34;
   min-height: 100vh;
@@ -10,9 +14,12 @@
   flex-wrap: wrap;
 }
 
-p {
+img, p {
   width: 250px;
   height: 250px;
+}
+
+p {
   margin: 5px;
   background-color: aliceblue;
   border-radius: 10px;
