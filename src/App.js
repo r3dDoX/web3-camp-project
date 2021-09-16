@@ -52,8 +52,8 @@ function App() {
       <div className="blobs">
         {wands.map((wand, index) => (
           <div key={index}>
-            <img key={index} src={wand.image} />
-            <p key={index}>
+            <img src={wand.image} />
+            <p>
               Wand #{wand.tokenId}<br/><br/>
               Fire: {wand.fire}<br/>
               Frost: {wand.frost}<br/>
