@@ -9,6 +9,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "base64-sol": "1.0.1",
     "chai": "4.3.4",
     "ethereum-waffle": "3.4.0",
     "ethers": "5.4.6",
@@ -41,8 +42,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "base64-sol": "1.0.1"
   }
 }
