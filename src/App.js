@@ -3,7 +3,12 @@ import {useState} from 'react';
 import {ethers} from 'ethers';
 import Wands from './artifacts/contracts/Wands.sol/Wands.json';
 
-const wandsAddress = '0xF7502B225be73eAb74Cf948e85c3CA0B7971EfaE';
+let wandsAddress;
+if (process.env.REACT_APP_CONTRACT_ADDRESS) {
+  wandsAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
+} else {
+  import('./wands-contract-address.json').then(module => wandsAddress = module.default);
+}
 
 function App() {
   const [wands, setWands] = useState([]);
