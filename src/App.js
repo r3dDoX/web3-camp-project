@@ -41,7 +41,7 @@ function App() {
       const encodedToken = await contract.tokenURI(token);
       const decodedToken = JSON.parse(atob(encodedToken.split(',')[1]));
       const wand = await contract.getWand(token);
-      setWands((prevWands) => [...prevWands, { tokenId: parseInt(token._hex), image: decodedToken.image, ...wand}]);
+      setWands((prevWands) => [...prevWands, { tokenId: parseInt(token._hex), ...decodedToken, ...wand}]);
     }
   }
 
@@ -52,7 +52,7 @@ function App() {
       <div className="blobs">
         {wands.map((wand, index) => (
           <div key={index}>
-            <img src={wand.image} />
+            <img src={wand.image} alt={wand.name} />
             <p>
               Wand #{wand.tokenId}<br/><br/>
               Fire: {wand.fire}<br/>
