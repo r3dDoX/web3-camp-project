@@ -14,12 +14,8 @@
   flex-wrap: wrap;
 }
 
-img, p {
-  width: 250px;
-  height: 250px;
-}
-
 p {
+  width: 250px;
   margin: 5px;
   background-color: aliceblue;
   border-radius: 10px;

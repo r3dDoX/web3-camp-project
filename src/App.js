@@ -1,5 +1,5 @@
 import './App.css';
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import {ethers} from 'ethers';
 import Wands from './artifacts/contracts/Wands.sol/Wands.json';
 
@@ -11,6 +11,7 @@ if (process.env.REACT_APP_CONTRACT_ADDRESS) {
 }
 
 function App() {
+  const textInput = useRef(null);
   const [wands, setWands] = useState([]);
 
   async function requestAccount() {
@@ -23,7 +24,7 @@ function App() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(wandsAddress, Wands.abi, signer);
-      const transaction = await contract.safeMint(await signer.getAddress());
+      const transaction = await contract.safeMint(await signer.getAddress(), textInput.current.value);
       await transaction.wait();
     }
   }
@@ -53,6 +54,7 @@ function App() {
 
   return (
     <div className="App">
+      <input ref={textInput} placeholder="Token to mint" />
       <button onClick={mintWand}>Mint Wand</button>
       <button onClick={fetchWands}>Fetch Wands</button>
       <div className="blobs">

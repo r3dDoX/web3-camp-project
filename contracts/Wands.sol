@@ -4,14 +4,10 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "base64-sol/base64.sol";
 
 contract Wands is ERC721, ERC721Enumerable, Ownable {
-    using Counters for Counters.Counter;
-
-    Counters.Counter private _tokenIdCounter;
 
     string[] colors = [
     "#000000",
@@ -283,17 +279,16 @@ contract Wands is ERC721, ERC721Enumerable, Ownable {
 
     constructor() ERC721("Wand", "WAND") {}
 
-    function safeMint(address to) public {
-        uint256 currentCounter = _tokenIdCounter.current();
-        _safeMint(to, currentCounter);
-        bytes memory randomizer = abi.encodePacked(block.difficulty, block.timestamp, Strings.toString(currentCounter));
-        wands[currentCounter] = Wand(
+    function safeMint(address to, uint256 tokenId) public {
+        require(tokenId > 0 && tokenId < 7778, "Token ID invalid");
+        _safeMint(to, tokenId);
+        bytes memory randomizer = abi.encodePacked(block.difficulty, block.timestamp, Strings.toString(tokenId));
+        wands[tokenId] = Wand(
             uint8(uint256(keccak256(abi.encodePacked('fire', randomizer)))),
             uint8(uint256(keccak256(abi.encodePacked('frost', randomizer)))),
             uint8(uint256(keccak256(abi.encodePacked('arcane', randomizer)))),
             uint8(uint256(keccak256(abi.encodePacked('style', randomizer))))
         );
-        _tokenIdCounter.increment();
     }
 
     function getWand(uint256 tokenId) public view returns (Wand memory) {
@@ -305,7 +300,7 @@ contract Wands is ERC721, ERC721Enumerable, Ownable {
         Wand memory wand = getWand(tokenId);
 
         string[9] memory parts;
-        parts[0] = '<svg width="100" height="100" viewBox="0 0 100 100" version="1.1" id="svg1833" xmlns="http://www.w3.org/2000/svg"><rect style="fill:';
+        parts[0] = '<svg width="250" height="250" viewBox="0 0 100 100" version="1.1" id="svg1833" xmlns="http://www.w3.org/2000/svg"><rect style="fill:';
         parts[1] = colors[wand.style];
         parts[2] = '" width="100" height="100" x="0" y="0" /><circle style="fill:';
         parts[3] = colors[wand.arcane];
@@ -316,7 +311,7 @@ contract Wands is ERC721, ERC721Enumerable, Ownable {
         parts[8] = '" width="15" height="10" x="65" y="45" /></svg>';
 
         string memory output = string(abi.encodePacked(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7], parts[8]));
-        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "WAND #', Strings.toString(tokenId), '", "description": "Enjoy your magic wand token!", "image": "data:image/svg+xml;base64,', Base64.encode(bytes(output)), '"}'))));
+        string memory json = Base64.encode(bytes(string(abi.encodePacked('{"name": "WAND #', Strings.toString(tokenId), '", "description": "Fire: ', Strings.toString(wand.fire) , ', Frost: ', Strings.toString(wand.frost), ', Arcane: ', Strings.toString(wand.arcane), ', Style: ', Strings.toString(wand.style), '", "image": "data:image/svg+xml;base64,', Base64.encode(bytes(output)), '"}'))));
         return string(abi.encodePacked('data:application/json;base64,', json));
     }
 
